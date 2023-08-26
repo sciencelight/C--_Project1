@@ -5,7 +5,7 @@
 #include <vector>
 using namespace std;
 
-int count(vector<int> &arr, int n, long long k)
+int count1(vector<int> &arr, int n, long long k)
 {
     unordered_map<long long, long long> prefixSum; // 前缀和加上k * l1及其出现的位置
     long long sum = 0;                             // 当前位置之前的元素和
@@ -39,7 +39,7 @@ int main()
     {
         scanf("%d", &arr[i]);
     }
-    printf("%d\n", count(arr, n, k));
+    printf("%d\n", count1(arr, n, k));
     return 0;
 }
 /*
