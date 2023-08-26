@@ -7,9 +7,9 @@ using namespace std;
 //还是咕咕咕好一点
 int count1(vector<int> &arr, int n, long long k)
 {
-    unordered_map<long long, long long> prefixSum; // 前缀和加上k * l1及其出现的位置
-    long long sum = 0;                             // 当前位置之前的元素和
-    long long maxLength = 0;                       // 最长子数组长度
+    unordered_map<long long, long long> prefixSum; // 鍓嶇紑鍜屽姞涓妅 * l1鍙婂叾鍑虹幇鐨勪綅缃�
+    long long sum = 0;                             // 褰撳墠浣嶇疆涔嬪墠鐨勫厓绱犲拰
+    long long maxLength = 0;                       // 鏈€闀垮瓙鏁扮粍闀垮害
     for (long long i = 0; i < n; i++)
     {
         sum += arr[i];
