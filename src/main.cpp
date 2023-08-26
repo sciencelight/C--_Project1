@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <vector>
 using namespace std;
-//呱呱！！！
+//还是咕咕咕好一点
 int count1(vector<int> &arr, int n, long long k)
 {
     unordered_map<long long, long long> prefixSum; // 前缀和加上k * l1及其出现的位置
