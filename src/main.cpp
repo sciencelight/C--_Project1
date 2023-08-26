@@ -4,12 +4,12 @@
 #include <unordered_map>
 #include <vector>
 using namespace std;
-//»¹ÊÇ¹¾¹¾¹¾ºÃÒ»µã
+//è¿˜æ˜¯å’•å’•å’•å¥½ä¸€ç‚¹
 int count1(vector<int> &arr, int n, long long k)
 {
-    unordered_map<long long, long long> prefixSum; // Ç°×ººÍ¼ÓÉÏk * l1¼°Æä³öÏÖµÄÎ»ÖÃ
-    long long sum = 0;                             // µ±Ç°Î»ÖÃÖ®Ç°µÄÔªËØºÍ
-    long long maxLength = 0;                       // ×î³¤×ÓÊı×é³¤¶È
+    unordered_map<long long, long long> prefixSum; // å‰ç¼€å’ŒåŠ ä¸Šk * l1åŠå…¶å‡ºç°çš„ä½ç½®
+    long long sum = 0;                             // å½“å‰ä½ç½®ä¹‹å‰çš„å…ƒç´ å’Œ
+    long long maxLength = 0;                       // æœ€é•¿å­æ•°ç»„é•¿åº¦
     for (long long i = 0; i < n; i++)
     {
         sum += arr[i];
