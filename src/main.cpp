@@ -1,45 +1,35 @@
 #include "common.h"
 
 #include <iostream>
-#include <unordered_map>
-#include <vector>
+#include <stdarg.h>
 using namespace std;
-//还是咕咕咕好一点
-int count1(vector<int> &arr, int n, long long k)
+double average(int count, ...)
 {
-    unordered_map<long long, long long> prefixSum; // 前缀和加上k * l1及其出现的位置
-    long long sum = 0;                             // 当前位置之前的元素和
-    long long maxLength = 0;                       // 最长子数组长度
-    for (long long i = 0; i < n; i++)
+    va_list args;
+    double sum = 0.0;
+
+    // 初始化可变参数列表
+    va_start(args, count);
+
+    // 遍历可变参数列表，累加参数值
+    for (int i = 0; i < count; i++)
     {
-        sum += arr[i];
-        if (sum == k * (i + 1))
-        {
-            maxLength = i + 1;
-        }
-        else if (prefixSum.find(sum - k * (i + 1)) != prefixSum.end())
-        {
-
-            maxLength = max(maxLength, i - prefixSum[sum - k * (i + 1)]);
-        }
-
-        if (prefixSum.find(sum - k * (i + 1)) == prefixSum.end())
-        {
-            prefixSum[sum - k * (i + 1)] = i;
-        }
+        double value = va_arg(args, double);
+        sum += value;
     }
-    return maxLength > 0 ? maxLength : -1;
+
+    // 结束可变参数列表的使用
+    va_end(args);
+
+    // 计算平均值
+    double average = sum / count;
+
+    return average;
 }
 int main()
 {
-    int n, k, sum;
-    scanf("%d %d", &n, &k);
-    vector<int> arr(n);
-    for (int i = 0; i < n; i++)
-    {
-        scanf("%d", &arr[i]);
-    }
-    printf("%d\n", count1(arr, n, k));
+    double avg2 = average(5, 1.5, 2.5, 3.5, 4.5, 5.5);
+    printf("Average 2: %f\n", avg2);
     return 0;
 }
 /*
