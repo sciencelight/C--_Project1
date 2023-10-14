@@ -1,5 +1,11 @@
 {
   "files.associations": {
-    "iostream": "cpp"
+    "iostream": "cpp",
+    "array": "cpp",
+    "string_view": "cpp",
+    "initializer_list": "cpp",
+    "utility": "cpp",
+    "cmath": "cpp",
+    "unordered_map": "cpp"
   }
 }

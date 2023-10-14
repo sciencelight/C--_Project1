@@ -1,1 +1,1 @@
-src/main.o: src/main.cpp include/common.h
+src/main.o: src/main.cpp

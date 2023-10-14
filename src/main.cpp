@@ -1,127 +1,102 @@
-#include "common.h"
-#include <vector>
 #include <iostream>
+#include <vector>
+#include <queue>
+#include <utility>
 using namespace std;
-class NumArray
+vector<vector<int>> direction = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+vector<string> split_str(string st)
 {
-private:
-    vector<int> tree;                        // 线段树
-    vector<int> arr;                         // 初始数组
-    vector<int> mark;                        // 懒标记数组
-    void build(int left, int right, int pos) // 线段树构建
+    vector<string> ans;
+    while (st.find(" ") != string::npos)
     {
-        if (left == right)
-            tree[pos] = arr[left];
-        else
-        {
-            int mid = left + ((right - left) >> 1);
-            build(left, mid, pos * 2);
-            build(mid + 1, right, pos * 2 + 1);
-            tree[pos] = min(tree[pos * 2], tree[pos * 2 + 1]);
-        }
+        int pos = st.find(" ");
+        ans.push_back(st.substr(0, pos));
+        st = st.substr(pos + 1);
     }
-    void push_down(int pos) // 区间下推
-    {
-        mark[pos * 2] = mark[pos];
-        mark[pos * 2 + 1] = mark[pos];
-        tree[pos * 2] += mark[pos];
-        tree[pos * 2 + 1] += mark[pos];
-        mark[pos] = 0;
-    }
-    void m_update(int left, int right, int pos, int l, int r)
-    {
-        if (left == right) // 边界条件，单一节点
-            tree[pos]--;
-        else if (left == l && right == r) // 区间重合，止步于此，懒标记记录
-        {
-            tree[pos]--;
-            mark[pos]--;
-        }
-        else
-        {
-            int mid = left + ((right - left) >> 1);
-            if (mark[pos] < 0)
-            {
-                push_down(pos); // 存在懒标记，区间下推
-                printf("after push down:\n");
-                print_tree();
-            }
-            if (l <= mid)
-                m_update(left, mid, pos * 2, l, min(mid, r));
-            if (r >= mid + 1)
-                m_update(mid + 1, right, pos * 2 + 1, max(mid + 1, l), r);
-            tree[pos] = min(tree[pos * 2], tree[pos * 2 + 1]);
-        }
-    }
-
-public:
-    NumArray(vector<int> &nums)
-    {
-        arr = nums;
-        tree.assign(arr.size() * 4, INT_MAX);
-        mark.assign(arr.size() * 4, 0);
-        build(0, arr.size() - 1, 1);
-    }
-    void update(int left, int right)
-    {
-        m_update(0, arr.size() - 1, 1, left, right);
-    }
-    void print_tree()
-    {
-        printf("tree:\n");
-        for (int i = 1; i < tree.size() - 1; i++)
-            printf("%d ", tree[i]);
-        printf("\n");
-    }
-    int query_top()
-    {
-        return tree[1];
-    }
-};
+    ans.push_back(st);
+    return ans;
+}
 int main()
 {
-    int n, m;
-    scanf("%d %d", &n, &m);
-    vector<int> nums(n);
-    for (int i = 0; i < n; i++)
-        scanf("%d", &nums[i]);
-    int version = 0;
-    NumArray seg(nums);
-    seg.print_tree();
-    for (int i = 0; i < m; i++)
+    // 矩阵读取
+    vector<vector<string>> matrix;
+    string line;
+    while (getline(cin, line))
     {
-        int l, r;
-        scanf("%d %d", &l, &r);
-        seg.update(l - 1, r - 1);
-        seg.print_tree();
-        if (seg.query_top() < 0)
-        {
-            printf("%d\n", version);
-            return 0;
-        }
-        version++;
+        if (line.size() == 0)
+            break;
+        else
+            matrix.push_back(split_str(line));
     }
-    printf("%d\n", version);
+    int n = matrix.size(), m = matrix[0].size();
+    // 数值转化
+    vector<vector<bool>> range(n, vector<bool>(m, false));
+    queue<pair<int, int>> que;
+    int needs = 0;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            string st = matrix[i][j];
+            if (st == "NO")
+            {
+                range[i][j] = true;
+                needs++;
+            }
+            else if (st == "YES")
+                que.push({i, j});
+        }
+    }
+    // 特判
+    if (needs == 0 || range.size() == 0)
+    {
+        printf("0\n");
+        return 0;
+    }
+    // 广度优先搜索
+    int turns = 0, cirles = 0;
+    while (!que.empty())
+    {
+        cirles++;
+        int size = que.size();
+        for (int i = 0; i < size; i++)
+        {
+            pair<int, int> node = que.front();
+            que.pop();
+            for (int k = 0; k < 4; k++)
+            {
+                int x = node.first + direction[k][0], y = node.second + direction[k][1];
+                if (x < 0 || y < 0 || x >= n || y >= m)
+                    continue;
+                if (range[x][y])
+                {
+                    turns++;
+                    que.push({x, y});
+                    range[x][y] = false;
+                }
+            }
+        }
+    }
+    if (needs == turns)
+        printf("%d\n", cirles - 1);
+    else
+        printf("-1\n");
     return 0;
 }
 /*
 测试数据：
-2 3
-2 2
-1 1
-1 2
-2 2
+YES YES NO
+NO NO NO
+YES NO NO
 
-2 3
-1 1
-1 1
-1 2
-2 2
+YES NO NO NO
+NO NO NO NO
+NO NO NO NO
+NO NO NO NO
 
-6 4
-4 3 5 2 4 6
-1 4
-5 6
-1 3
-2 2
+YES NO NO YES
+NO NO YES NO
+NO YES NA NA
+YES NO NA NO
+
 */
